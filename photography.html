@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Photography</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="book-page-body">
+    <nav class="top-nav"><a href="index.html">INDEX</a></nav>
+    <a href="design.html" class="side-nav right"><span class="arrow">→</span><span class="nav-label">DESIGN</span></a>
+
+    <div class="book-wrapper">
+        <div class="book" id="myBook" onclick="toggleBook()">
+            <div class="page" id="cover">
+                <div class="front photo-cover-style"><h1>Photography Gallery</h1></div>
+                <div class="back">
+                    <div class="photo-layout-2">
+                        <div class="img-slot"><img src="" class="shuffled-img tall-img"></div>
+                        <div class="img-slot"><img src="" class="shuffled-img tall-img"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="page" id="basePage">
+                <div class="front">
+                    <div class="photo-layout-3">
+                        <div class="img-slot"><img src="" class="shuffled-img wide-img"></div>
+                        <div class="img-slot"><img src="" class="shuffled-img wide-img"></div>
+                        <div class="img-slot"><img src="" class="shuffled-img wide-img"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 1. ORGANIZE YOUR PHOTOS BY SHAPE
+        const photoPool = {
+            tall: ['tuffman.png', 'broryan.png', 'photo8.jpg', 'photo9.jpg'], // Vertical shots
+            wide: ['garden.png', 'tree.png', 'thesunset.png', 'castle.png', 'village.png', 'photo10.jpg'] // Horizontal shots
+        };
+
+        let activePhotos = { tall: [], wide: [] };
+
+        function toggleBook() {
+            const book = document.getElementById('myBook');
+            const cover = document.getElementById('cover');
+            
+            if (book.classList.contains('open')) {
+                book.classList.remove('open');
+                cover.classList.remove('flipped');
+                setTimeout(() => { cover.style.zIndex = "10"; }, 600);
+            } else {
+                book.classList.add('open');
+                cover.classList.add('flipped');
+                setTimeout(() => { cover.style.zIndex = "1"; }, 600);
+            }
+        }
+
+        // 3. SMART ROTATION LOGIC
+        window.onload = () => {
+            const imgElements = document.querySelectorAll('.shuffled-img');
+            
+            // Initial load - match shape to slot
+            imgElements.forEach(img => {
+                const type = img.classList.contains('tall-img') ? 'tall' : 'wide';
+                const available = photoPool[type].filter(src => !activePhotos[type].includes(src));
+                
+                if (available.length > 0) {
+                    const randomImg = available[Math.floor(Math.random() * available.length)];
+                    img.src = randomImg;
+                    activePhotos[type].push(randomImg);
+                }
+            });
+
+            // Rotate every 4 seconds
+            setInterval(() => {
+                const slotIndex = Math.floor(Math.random() * imgElements.length);
+                const targetImg = imgElements[slotIndex];
+                
+                // Figure out if the target slot wants a tall or wide image
+                const type = targetImg.classList.contains('tall-img') ? 'tall' : 'wide';
+
+                // Find images of that shape that aren't currently on the screen
+                const available = photoPool[type].filter(src => !activePhotos[type].includes(src));
+                
+                if (available.length > 0) {
+                    const newSrc = available[Math.floor(Math.random() * available.length)];
+
+                    targetImg.classList.add('fade-out');
+                    setTimeout(() => {
+                        targetImg.src = newSrc;
+                        
+                        // Update the active tracker
+                        const oldSrcIndex = activePhotos[type].indexOf(targetImg.getAttribute('src'));
+                        if (oldSrcIndex > -1) activePhotos[type].splice(oldSrcIndex, 1);
+                        activePhotos[type].push(newSrc);
+                        
+                        targetImg.classList.remove('fade-out');
+                    }, 800);
+                }
+            }, 4000);
+        };
+    </script>
+</body>
+</html>

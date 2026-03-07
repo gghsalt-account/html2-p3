@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Design</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="book-page-body">
+    <nav class="top-nav"><a href="index.html">INDEX</a></nav>
+    <a href="photography.html" class="side-nav left"><span class="arrow">←</span><span class="nav-label">PHOTO</span></a>
+    <a href="contact.html" class="side-nav right"><span class="arrow">→</span><span class="nav-label">CONTACT</span></a>
+
+    <div class="book-wrapper">
+        <div class="book" id="myBook" onclick="toggle()">
+            <div class="page" id="cover">
+                <div class="front design-cover-style"><h1>DESIGN</h1></div>
+                <div class="back">
+                    <div class="design-layout-2">
+                        <div class="img-slot"><img src="" class="shuffled-img"></div>
+                        <div class="img-slot"><img src="" class="shuffled-img"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="page" id="basePage">
+                <div class="front">
+                    <div class="design-layout-3">
+                        <div class="img-slot"><img src="" class="shuffled-img"></div>
+                        <div class="img-slot"><img src="" class="shuffled-img"></div>
+                        <div class="img-slot"><img src="" class="shuffled-img"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Update this list with your actual design filenames
+        const designPool = [
+            'cubism project.png', 'compound.jpeg', 'd3.jpg', 'd4.jpg', 
+            'd5.jpg', 'd6.jpg', 'd7.jpg', 'd8.jpg', 'd9.jpg', 'd10.jpg'
+        ];
+
+        let activeDesigns = [];
+
+        window.onload = () => {
+            const imgElements = document.querySelectorAll('.shuffled-img');
+            
+            let shuffled = [...designPool].sort(() => 0.5 - Math.random());
+            activeDesigns = shuffled.slice(0, 5);
+            
+            imgElements.forEach((img, i) => {
+                img.src = activeDesigns[i];
+            });
+
+            setInterval(rotateDesign, 4000);
+        };
+
+        function rotateDesign() {
+            const imgElements = document.querySelectorAll('.shuffled-img');
+            const slotIndex = Math.floor(Math.random() * imgElements.length);
+            const targetImg = imgElements[slotIndex];
+
+            const available = designPool.filter(src => !activeDesigns.includes(src));
+            const newSrc = available[Math.floor(Math.random() * available.length)];
+
+            targetImg.classList.add('fade-out');
+            setTimeout(() => {
+                targetImg.src = newSrc;
+                activeDesigns[slotIndex] = newSrc;
+                targetImg.classList.remove('fade-out');
+            }, 800);
+        }
+
+        function toggle() {
+            const b = document.getElementById('myBook'), c = document.getElementById('cover');
+            if(b.classList.contains('open')) { 
+                b.classList.remove('open'); c.classList.remove('flipped');
+                setTimeout(() => { c.style.zIndex = "10"; }, 600);
+            } else { 
+                b.classList.add('open'); c.classList.add('flipped');
+                setTimeout(() => { c.style.zIndex = "1"; }, 600);
+            }
+        }
+    </script>
+</body>
+</html>
