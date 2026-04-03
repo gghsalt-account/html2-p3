@@ -22,7 +22,7 @@ body { background-color: var(--white); color: var(--blue); font-family: 'Inter',
 
 .photo-bg { background-image: url('thesunset.png'); background-size: cover; }
 .design-bg { background-image: url('cubism project.png'); background-size: cover; }
-.contact-bg { background-image: url('compound.jpeg'); background-size: cover; }
+.contact-bg { background-image: url('garden.png'); background-size: cover; }
 
 /* --- 3. NAVIGATION --- */
 .top-nav { position: fixed; top: 30px; left: 0; width: 100%; padding: 0 50px; display: flex; justify-content: space-between; z-index: 999; }
